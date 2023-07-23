@@ -42,7 +42,30 @@ create order
 
 ## Creación de Modelos
 
-1. ERD (Diagrama de relación de entidades)
+1. ERD (Diagrama de relación de entidades).
+
+   | Model       | Relation   | Model       |
+   | :---------- | :--------- | :---------- |
+   | artists     | has_many   | albums      |
+   | albums      | belongs_to | artists     |
+   | albums      | has_many   | songs       |
+   | songs       | belongs_to | albums      |
+   | albums      | has_many   | order_items |
+   | order_items | belongs_to | albums      |
+   | orders      | has_many   | order_items |
+   | order_items | belongs_to | orders      |
+   | users       | has_many   | orders      |
+   | orders      | belongs_to | users       |
+
+   |    Model    |   belong_to    |      has_many      |
+   | :---------: | :------------: | :----------------: |
+   |   albums    |    artists     | songs, order_items |
+   |   artist    |       -        |       albums       |
+   |    songs    |     albums     |         -          |
+   | order_items | albums, orders |         -          |
+   |   orders    |     users      |    order_items     |
+   |    users    |       -        |       orders       |
+
 1. Creando el modelo Artist
 
    ```
