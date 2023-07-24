@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  quantity: 1
+  sub_total: 1
+  album: one
+  order: one
+
+two:
+  quantity: 1
+  sub_total: 1
+  album: two
+  order: two

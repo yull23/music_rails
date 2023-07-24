@@ -44,6 +44,10 @@ create order
 
 1. ERD (Diagrama de relación de entidades).
 
+   ![ERD](ERD.jpg)
+
+   A continuación se muestran las relaciones correspondientes entre los modelos:
+
    | Model       | Relation   | Model       |
    | :---------- | :--------- | :---------- |
    | artists     | has_many   | albums      |
@@ -57,35 +61,25 @@ create order
    | users       | has_many   | orders      |
    | orders      | belongs_to | users       |
 
-   |    Model    |   belong_to    |      has_many      |
+   Se resumen para cada modelo en:
+   | Model | belong_to | has_many |
    | :---------: | :------------: | :----------------: |
-   |   albums    |    artists     | songs, order_items |
-   |   artist    |       -        |       albums       |
-   |    songs    |     albums     |         -          |
-   | order_items | albums, orders |         -          |
-   |   orders    |     users      |    order_items     |
-   |    users    |       -        |       orders       |
+   | albums | artists | songs, order_items |
+   | artist | - | albums |
+   | songs | albums | - |
+   | order_items | albums, orders | - |
+   | orders | users | order_items |
+   | users | - | orders |
 
-1. Creando el modelo Artist
+1. Creación de modeles desde la entrada de la terminal
 
    ```
    rails generate model Artist name nationality birth_date:date death_date:date
+   rails generate model User username password first_name last_name flag:boolean
+   rails generate model Album name price:integer artist:references
+   rails generate model Song name duration:integer album:references
+   rails generate model Order total:integer order_date:date user:references
+   rails generate model OrderItem quantity:integer sub_total:integer album:references order:references
    ```
 
-   Adicionalmente se configura el archivo de migración, donde se encuentra la creación de la tabla, para asegurarnos que la base de datos no reciba un valor nulo para el atributo name, según lo requerido.
-
-   ```
-    class CreateArtists < ActiveRecord::Migration[7.0]
-      def change
-        create_table :artists do |t|
-          t.string :name, null: false
-          t.string :nationality
-          t.date :birth_date
-          t.date :death_date
-          t.timestamps
-        end
-      end
-    end
-   ```
-
-1. Creando el modelo
+1. Creación de las migraciones, solicitadas
