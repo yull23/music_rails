@@ -66,7 +66,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_031708) do
   create_table "users", force: :cascade do |t|
     t.string "username", null: false
     t.string "password", null: false
-    t.string "email", null: false
+    t.string "email"
     t.string "first_name"
     t.string "last_name"
     t.boolean "flag", default: true

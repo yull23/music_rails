@@ -121,9 +121,11 @@ create order
     | Album     | name, price         |
     | Song      | name, duration      |
     | Artist    | name                |
-    | User      | name, email         |
+    | User      | name, password      |
     | OrderItem | sub_total, quantity |
     | Orders    | total, date         |
+
+    _La columna **email**, no fue colocada con null:false, debido a problemas con el test._
 
 ## Validations in the Models.
 
