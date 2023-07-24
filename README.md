@@ -129,17 +129,80 @@ create order
 
 ## Validations in the Models.
 
-1. Presence: True
+1. Artist Model Validation:
 
-   | Model     | Presence:True       |
-   | --------- | ------------------- |
-   | Artist    | name                |
-   | User      | name, email         |
-   | Album     | name, price         |
-   | Song      | name, duration      |
-   | Orders    | total, date         |
-   | OrderItem | sub_total, quantity |
+   - The date of birth (birth_date) cannot be in the future.
 
-## Verification of validations through model tests
+   - If the death date (death_date) is stored, two conditions must be met:
 
-1.
+     - The date of birth (birth_date) must exist.
+     - The death date (death_date) must be after the birth date (birth_date).
+
+   The following validations are performed:
+
+   ```
+   class Artist < ApplicationRecord
+     validates :name, uniqueness: true, presence: true
+     validate :check_birth_date_presence
+     validate :death_date_valid
+
+     def check_birth_date_presence
+       return unless death_date.present? && birth_date.blank?
+
+       errors.add(:birth_date, "Must be present if death_date is provided")
+     end
+
+     def death_date_valid
+       return unless birth_date.present? && death_date.present? && birth_date > death_date
+
+       errors.add(:death_date, "must be greater than birth_date")
+     end
+   end
+   ```
+
+   The following test corresponds:
+
+   ```
+   require "test_helper"
+
+   class ArtistTest < ActiveSupport::TestCase
+     test "should not save artist without name" do
+       artist = Artist.new
+       assert_not artist.save, "Saved the artist without a name"
+     end
+     test "should save artist with valid name" do
+       artist = Artist.new(name: "Joaquin")
+       assert artist.save, "Could not save the artist with a valid name"
+     end
+     test "should not save artist with duplicate name" do
+       artist_1 = Artist.create(name: "John Doe")
+       artist_2 = Artist.new(name: "John Doe")
+       assert_not artist_2.save, "Saved the artist with a duplicate name"
+     end
+     test "should require birth_date if death_date is provided" do
+       artist = Artist.new(name: "Juan", death_date: "1998-01-01")
+       assert_not artist.save, "Saved the artist with a death_date but no birth_date"
+     end
+     test "should save artist with valid birth_date and death_date" do
+       artist = Artist.new(name: "Jane Doe", birth_date: Date.new(1990, 1, 1),
+                           death_date: Date.new(2023, 1, 1))
+       assert artist.save, "Could not save the artist with valid birth_date and death_date"
+     end
+     test "should not save artist with death_date earlier than birth_date" do
+       artist = Artist.new(name: "Jane Doe", birth_date: Date.new(1990, 1, 1),
+                           death_date: Date.new(1980, 1, 1))
+       assert_not artist.save, "Saved the artist with death_date earlier than birth_date"
+     end
+     # Finish
+   end
+   ```
+
+1. Artist Model Validation
+
+   - Email must be in a valid email format.
+   - The username is required and cannot be blank.
+   - Password must be at least 6 characters long and must include at least one number.
+   - By default, a client is active at the time of creation.
+   - Both the username and the email must be unique in the database.
+
+   The following validations are performed:

@@ -12,9 +12,9 @@ class ArtistTest < ActiveSupport::TestCase
     assert artist.save, "Could not save the artist with a valid name"
   end
   test "should not save artist with duplicate name" do
-    artist1 = Artist.create(name: "John Doe")
-    artist2 = Artist.new(name: "John Doe")
-    assert_not artist2.save, "Saved the artist with a duplicate name"
+    artist_1 = Artist.create(name: "John Doe")
+    artist_2 = Artist.new(name: "John Doe")
+    assert_not artist_2.save, "Saved the artist with a duplicate name"
   end
   test "should require birth_date if death_date is provided" do
     artist = Artist.new(name: "Juan", death_date: "1998-01-01")

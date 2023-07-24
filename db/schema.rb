@@ -15,8 +15,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_031708) do
   enable_extension "plpgsql"
 
   create_table "albums", force: :cascade do |t|
-    t.string "name", null: false
-    t.integer "price", null: false
+    t.string "name"
+    t.integer "price"
     t.bigint "artist_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -25,7 +25,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_031708) do
   end
 
   create_table "artists", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name"
     t.string "nationality"
     t.date "birth_date"
     t.date "death_date"
@@ -35,8 +35,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_031708) do
   end
 
   create_table "order_items", force: :cascade do |t|
-    t.integer "quantity", null: false
-    t.integer "sub_total", null: false
+    t.integer "quantity"
+    t.integer "sub_total"
     t.bigint "album_id", null: false
     t.bigint "order_id", null: false
     t.datetime "created_at", null: false
@@ -46,8 +46,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_031708) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.integer "total", null: false
-    t.date "order_date", null: false
+    t.integer "total"
+    t.date "order_date"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -55,8 +55,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_031708) do
   end
 
   create_table "songs", force: :cascade do |t|
-    t.string "name", null: false
-    t.integer "duration", null: false
+    t.string "name"
+    t.integer "duration"
     t.bigint "album_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -64,8 +64,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_031708) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username", null: false
-    t.string "password", null: false
+    t.string "username"
+    t.string "password"
     t.string "email"
     t.string "first_name"
     t.string "last_name"
