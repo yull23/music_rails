@@ -127,4 +127,17 @@ create order
 
 ## Validations in the Models.
 
+1. Presence: True
+
+   | Model     | Presence:True       |
+   | --------- | ------------------- |
+   | Artist    | name                |
+   | User      | name, email         |
+   | Album     | name, price         |
+   | Song      | name, duration      |
+   | Orders    | total, date         |
+   | OrderItem | sub_total, quantity |
+
+## Verification of validations through model tests
+
 1.

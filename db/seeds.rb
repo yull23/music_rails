@@ -7,17 +7,12 @@
 #   Character.create(name: "Luke", movie: movies.first)
 require "faker"
 
-10.times do |i|
-  puts "#{i}"
-end
-
-# >> 0
-# >> 1
-# >> 2
-# >> 3
-# >> 4
-# >> 5
-# >> 6
-# >> 7
-# >> 8
-# >> 9
+# 10.times do |i|
+#   puts Faker::Name.first_name
+#   puts Faker::Name.last_name
+# end
+Artist.destroy_all
+Artist.create(name:"Yull")
+Artist.create(name:"Yull_2",birth_date:"2023-07-18")
+Artist.create(name:"Yull_3",birth_date:"2023-07-18",death_date:"2023-07-18")
+Artist.create(name:"Yull_4",death_date:"2023-07-18")
