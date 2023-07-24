@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :orders
   validates :username, presence: true,
                        format: { with: /\A[A-Za-z0-9]+\z/, message: "must only contain letters and numbers" },
                        uniqueness: true

@@ -197,7 +197,7 @@ create order
    end
    ```
 
-1. Artist Model Validation
+1. User Model Validation
 
    - Email must be in a valid email format.
    - The username is required and cannot be blank.
@@ -206,3 +206,148 @@ create order
    - Both the username and the email must be unique in the database.
 
    The following validations are performed:
+
+   ```
+   class User < ApplicationRecord
+     has_many :orders
+     validates :username, presence: true,
+                         format: { with: /\A[A-Za-z0-9]+\z/, message: "must only contain letters and numbers" },
+                         uniqueness: true
+     validates :email, presence: true,
+                     format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" },
+                     uniqueness: true
+     validates :password, length: { minimum: 6, message: "must be at least 6 characters long" },
+                         format: { with: /\d/, message: "must include at least one number" }
+     validates :first_name, presence: true
+     validates :last_name, presence: true
+     before_validation :default_flag_to_true
+
+     def default_flag_to_true
+       self.flag = true
+     end
+   end
+
+   ```
+
+   The following test corresponds:
+
+   ```
+   require "test_helper"
+
+   class UserTest < ActiveSupport::TestCase
+     def setup
+       @user = User.new(
+         username: "yull123",
+         password: "password123",
+         email: "yull@example.com",
+         first_name: "yull",
+         last_name: "Doe"
+       )
+       @user_1 = User.new(
+         username: "yull123",
+         password: "password123",
+         email: "yull_30@example.com",
+         first_name: "yull",
+         last_name: "Doe"
+       )
+       @user_2 = User.new(
+         username: "yull12345",
+         password: "password123",
+         email: "yull_30@example.com",
+         first_name: "yull",
+         last_name: "Doe"
+       )
+       @user_3 = User.new(
+         username: "yull12345",
+         password: "password123",
+         email: "yull_30@exampl",
+         first_name: "yull",
+         last_name: "Doe"
+       )
+     end
+
+     test "should be valid with all required attributes" do
+       # skip
+       assert @user.valid?, "User with all required attributes should be valid"
+     end
+
+     test "should not be valid without a username" do
+       # skip
+       @user.username = ""
+       assert_not @user.valid?, "User without username should not be valid"
+     end
+
+     test "should only contain letters and numbers in the username" do
+       # skip
+       invalid_usernames = ["john_doe", "user@name", "user!name"]
+       invalid_usernames.each do |username|
+         @user.username = username
+         assert_not @user.valid?, "Username should only contain letters and numbers"
+       end
+     end
+     test "should have a unique username" do
+       # skip
+       @user.save
+       assert_not @user_1.valid?, "User with duplicate username should not be valid"
+     end
+     test "should not save user with duplicate email" do
+       # skip
+       @user_1.save
+       assert_not @user_2.valid?, "User with duplicate email should not be saved"
+     end
+
+     test "should not be valid without an email" do
+       # skip
+       @user_2.email = ""
+       assert_not @user_2.valid?, "User without email should not be valid"
+     end
+
+     test "should have a valid email format" do
+       # skip
+       invalid_emails = ["johnexample", "johnexample.", "johnexample.com"]
+       invalid_emails.each do |email|
+         @user_2.email = email
+         assert_not @user_2.valid?, "User should not be valid with invalid email: #{email}"
+       end
+     end
+
+     test "should not be valid without a password" do
+       # skip
+       @user_2.password = ""
+       assert_not @user_2.valid?, "User without password should not be valid"
+     end
+
+     test "should not be valid with a password less than 6 characters" do
+       # skip
+       @user_2.password = "pass1"
+       assert_not @user_2.valid?, "User with password less than 6 characters should not be valid"
+     end
+
+     test "should not be valid with a password without a number" do
+       # skip
+       @user_2.password = "password"
+       assert_not @user_2.valid?, "User with password without a number should not be valid"
+     end
+
+     test "should not be valid without a first_name" do
+       # skip
+       @user_2.first_name = ""
+       assert_not @user_2.valid?, "User without first name should not be valid"
+     end
+
+     test "should not be valid without a last_name" do
+       # skip
+       @user_2.last_name = ""
+       assert_not @user_2.valid?, "User without last name should not be valid"
+     end
+
+     test "should default flag to true before validation" do
+       # skip
+       @user_2.flag = nil
+       @user_2.save
+       assert_equal true, @user.flag
+     end
+   end
+   ```
+
+1. Album Model Validation
