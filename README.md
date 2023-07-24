@@ -25,7 +25,7 @@ create album
 create order
   total=0
   while value_1=true
-    create order_item, album_id
+    create order_item, album_id, user_id
       sub_total=0
       while value_2=true
         add album.id
@@ -71,15 +71,57 @@ create order
    | orders | users | order_items |
    | users | - | orders |
 
-1. Creación de modeles desde la entrada de la terminal
+1. Creación de modeles desde la entrada de la terminal:
 
    ```
    rails generate model Artist name nationality birth_date:date death_date:date
-   rails generate model User username password first_name last_name flag:boolean
+   rails generate model User username email password first_name last_name flag:boolean
    rails generate model Album name price:integer artist:references
    rails generate model Song name duration:integer album:references
    rails generate model Order total:integer order_date:date user:references
    rails generate model OrderItem quantity:integer sub_total:integer album:references order:references
    ```
 
-1. Creación de las migraciones, solicitadas
+1. Creación de las migraciones solicitadas:
+
+   ```
+    rails generate migration AddBiographyToArtists
+    rails generate migration AddDurationToAlbums
+    rails generate migration AddIndexToUsers
+    rails generate migration ChangeDataTypeForBiographyInArtists
+   ```
+
+   Se debe incluir el siguiente codigo,, para las migraciones correspondientes
+
+   ```
+     def change
+      add_colunm :artists, :biography, :string
+     end
+     def change
+      add_column  :albums, :duration, :integer
+     end
+     def change
+      add_index :users, :username
+      add_index :users, :email
+     end
+     def up
+      change_column :artists, :biography, :text
+     end
+     def down
+      change_column :artists, :biography, :string
+     end
+   ```
+
+1. Edición de la validación para la base de datos.
+   A raiz de estas, se realiza la validación para el modelo.
+
+   | Model     | Null False          |
+   | --------- | ------------------- |
+   | Album     | name, price         |
+   | Song      | name, duration      |
+   | Artist    | name                |
+   | User      | name, email         |
+   | OrderItem | sub_total, quantity |
+   | Orders    | total, date         |
+
+## Validaciones en los Modelos.
