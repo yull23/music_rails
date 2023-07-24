@@ -30,4 +30,5 @@ class ArtistTest < ActiveSupport::TestCase
                         death_date: Date.new(1980, 1, 1))
     assert_not artist.save, "Saved the artist with death_date earlier than birth_date"
   end
+  # Finish
 end
