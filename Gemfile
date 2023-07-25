@@ -58,7 +58,6 @@ group :development do
   gem "faker"
   gem "rubocop", require: false
   gem "rubocop-rails", require: false
-  gem "validates_timeliness", "~> 7.0.0.beta1"
   gem "web-console"
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]

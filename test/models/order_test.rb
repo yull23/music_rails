@@ -14,24 +14,24 @@ class OrderTest < ActiveSupport::TestCase
   test "Validations for order_date" do
     # skip
     order = Order.new(total: 20, user_id: @user.id)
-    assert_not order.valid?, "No deberia guardarse sin un order_date"
-    order = Order.new(order_date: "2026-258-25", total: 20, user_id: @user.id)
-    assert_not order.valid?, "No deberia guardar un formato invalido"
-    order = Order.new(order_date: "2005-11-11", total: 20, user_id: @user.id)
-    assert order.valid?, "Debería poder guardar la fecha con un formato valido"
-    order = Order.new(order_date: "1995-11-11", total: 20, user_id: @user.id)
-    assert order.valid?, "Debería poder guardar la fecha con un formato valido"
+    assert_not order.valid?, "It should not be saved with the order_date field empty"
+    order = Order.new(order_date: "yull", total: 20, user_id: @user.id)
+    assert_not order.valid?, "It should not be saved, if it is not given a correct date format"
+    order = Order.new(order_date: "2995-01-01", total: 20, user_id: @user.id)
+    assert_not order.valid?, "Shouldn't save to a future date"
+    order = Order.new(order_date: "1995-01-01", total: 20, user_id: @user.id)
+    assert order.valid?, "It should save correctly with a valid date"
   end
 
-  test "Validations for duration" do
-    skip
-    order = Order.new(name: "order", album_id: @album.id)
-    assert_not order.valid?, "Shouldn't save without duration"
-    song_2 = Order.new(name: "order", duration: 0, album_id: @album.id)
-    assert_not song_2.valid?, "Should not save with duration equal to zero"
-    song_3 = Order.new(name: "order", duration: -150, album_id: @album.id)
-    assert_not song_3.valid?, "Shouldn't save with negative duration"
-    song_4 = Order.new(name: "order", duration: 50, album_id: @album.id)
-    assert song_4.valid?, "Should save if duration is correct"
+  test "Validations for total" do
+    # skip
+    order = Order.new(order_date: "1995-01-01", user_id: @user.id)
+    assert_not order.valid?, "It should not be saved without the total field."
+    order = Order.new(order_date: "1995-01-01", total: 0, user_id: @user.id)
+    assert_not order.valid?, "Should not be saved with a total equal to zero"
+    order = Order.new(order_date: "1995-01-01", total: -10, user_id: @user.id)
+    assert_not order.valid?, "Should not be saved with a negative total"
+    order = Order.new(order_date: "1995-01-01", total: 10, user_id: @user.id)
+    assert order.valid?, "It should save the order correctly"
   end
 end
