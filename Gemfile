@@ -58,6 +58,7 @@ group :development do
   gem "faker"
   gem "rubocop", require: false
   gem "rubocop-rails", require: false
+  gem "validates_timeliness", "~> 7.0.0.beta1"
   gem "web-console"
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
@@ -70,7 +71,6 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
-  gem "faker"
   gem "selenium-webdriver"
   gem "webdrivers"
 end

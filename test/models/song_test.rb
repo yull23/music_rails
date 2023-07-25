@@ -10,7 +10,7 @@ class SongTest < ActiveSupport::TestCase
       artist_id: Artist.find_by(name: "Name").id
     )
   end
-  test "Validations for Song" do
+  test "Validations for Name" do
     song = Song.new(duration: 10, album_id: @album.id)
     assert_not song.valid?, "Shouldn't save Song with empty name"
     song_2 = Song.new(name: "", duration: 10, album_id: @album.id)
