@@ -351,3 +351,77 @@ create order
    ```
 
 1. Album Model Validation
+
+   - Cada álbum tiene un nombre.
+   - Cada álbum tiene un precio almacenado en centavos.
+   - Un álbum tiene muchas canciones.
+   - Un álbum pertenece a un artista (solo a un artista).
+   - Un álbum válido siempre tiene un nombre.
+   - Un álbum válido siempre tiene un precio mayor que cero (en centavos).
+   - Un álbum válido siempre tiene una duración mayor que cero.
+
+   The following validations are performed:
+
+   ```
+   class Album < ApplicationRecord
+     belongs_to :artist
+     has_many :songs
+     has_many :order_items
+     validates :name, presence: true
+     validates :price, presence: true, numericality: { greater_than: 0 }
+     validates :duration, presence: true, numericality: { greater_than: 0 }
+   end
+   ```
+
+   The following test corresponds:
+
+   ```
+   require "test_helper"
+
+   class AlbumTest < ActiveSupport::TestCase
+     def setup
+       Artist.create(name: "Artist 1")
+     end
+
+     test "should be valid with all required attributes" do
+       # skip
+       album = Album.new(
+         name: "Example Album",
+         price: 9.99,
+         duration: 120,
+         artist_id: Artist.find_by(name: "Artist 1").id
+       )
+       assert album.valid?
+     end
+
+     test "should not be valid without a name" do
+       # skip
+       album = Album.new(
+         price: 9.99,
+         duration: 120,
+         artist_id: Artist.find_by(name: "Artist 1").id
+       )
+       assert_not album.valid?
+     end
+
+     test "should not be valid without a price" do
+       # skip
+       album = Album.new(
+         name: "Example Album",
+         duration: 120,
+         artist_id: Artist.find_by(name: "Artist 1").id
+       )
+       assert_not album.valid?
+     end
+
+     test "should not be valid without a duration" do
+       # skip
+       album = Album.new(
+         name: "Example Album",
+         price: 9.99,
+         artist_id: Artist.find_by(name: "Artist 1").id
+       )
+       assert_not album.valid?
+     end
+   end
+   ```
