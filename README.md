@@ -352,13 +352,13 @@ create order
 
 1. Album Model Validation
 
-   - Cada álbum tiene un nombre.
-   - Cada álbum tiene un precio almacenado en centavos.
-   - Un álbum tiene muchas canciones.
-   - Un álbum pertenece a un artista (solo a un artista).
-   - Un álbum válido siempre tiene un nombre.
-   - Un álbum válido siempre tiene un precio mayor que cero (en centavos).
-   - Un álbum válido siempre tiene una duración mayor que cero.
+   - Each album has a name.
+   - Each album has a price stored in cents.
+   - An album has many songs.
+   - An album belongs to an artist (only one artist).
+   - A valid album always has a name.
+   - A valid album always has a price greater than zero (in cents).
+   - A valid album always has a duration greater than zero.
 
    The following validations are performed:
 
@@ -425,3 +425,65 @@ create order
      end
    end
    ```
+
+1. Song Model Validation
+
+   - Song must have a duration
+   - Song must have a name
+   - Song must be associated with only one album
+
+   The following validations are performed:
+
+   ```
+   class Song < ApplicationRecord
+     belongs_to :album
+     validates :name, presence: true
+     validates :duration, presence: true, numericality: { greater_than: 0 }
+   end
+   ```
+
+   The following test corresponds:
+
+   ```
+   require "test_helper"
+
+   class SongTest < ActiveSupport::TestCase
+     def setup
+       @artist = Artist.create(name: "Name")
+       @album = Album.create(
+         name: "Album",
+         duration: 10,
+         price: 10,
+         artist_id: Artist.find_by(name: "Name").id
+       )
+     end
+     test "Validations for Song" do
+       song = Song.new(duration: 10, album_id: @album.id)
+       assert_not song.valid?, "Shouldn't save Song with empty name"
+       song_2 = Song.new(name: "", duration: 10, album_id: @album.id)
+       assert_not song_2.valid?, "Shouldn't save Song with empty name"
+       song_3 = Song.new(name: "Song", duration: 10, album_id: @album.id)
+       assert song_3.valid?, "Shouldn't save Song with empty name"
+     end
+
+     test "Validations for duration" do
+       song = Song.new(name: "Song", album_id: @album.id)
+       assert_not song.valid?, "Shouldn't save without duration"
+       song_2 = Song.new(name: "Song", duration: 0, album_id: @album.id)
+       assert_not song_2.valid?, "Should not save with duration equal to zero"
+       song_3 = Song.new(name: "Song", duration: -150, album_id: @album.id)
+       assert_not song_3.valid?, "Shouldn't save with negative duration"
+       song_4 = Song.new(name: "Song", duration: 50, album_id: @album.id)
+       assert song_4.valid?, "Should save if duration is correct"
+     end
+
+     test "Validations for the belong_to relationship" do
+       song = Song.create(name: "Song_1", duration: 50, album_id: @album.id)
+       assert_equal song.album.id, @album.id,
+                   "It should belong to the album with which it was declared"
+     end
+   end
+   ```
+
+The following validations are performed:
+The following test corresponds:
