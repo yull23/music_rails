@@ -34,4 +34,11 @@ class OrderTest < ActiveSupport::TestCase
     order = Order.new(order_date: "1995-01-01", total: 10, user_id: @user.id)
     assert order.valid?, "It should save the order correctly"
   end
+
+  test "Validations for the belong_to relationship" do
+    # skip
+    order = Order.create(order_date: "2005-01-01", total: 10, user_id: @user.id)
+    assert_equal order.user.id, @user.id,
+                 "It should belong to the user with which it was created"
+  end
 end
