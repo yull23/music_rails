@@ -131,7 +131,8 @@ create order
     | OrderItem | sub_total, quantity |
     | Orders    | total, date         |
 
-    _La columna **email**, no fue colocada con null:false, debido a problemas con el test._
+    _The **email** column was not placed with null:false, due to problems with the test._
+    _*These configurations must be made at the end, so that the tests can be executed normally, since once the model validations have been carried out, these restrictions are applied to the database.*_
 
 ## Validations in the Models.
 
