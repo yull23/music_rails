@@ -132,7 +132,6 @@ create order
 1. Artist Model Validation:
 
    - The date of birth (birth_date) cannot be in the future.
-
    - If the death date (death_date) is stored, two conditions must be met:
 
      - The date of birth (birth_date) must exist.

@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_031708) do
     t.bigint "artist_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "duration"
+    t.integer "duration", default: 0
     t.index ["artist_id"], name: "index_albums_on_artist_id"
   end
 
@@ -46,7 +46,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_031708) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.integer "total"
+    t.integer "total", default: 0
     t.date "order_date"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
