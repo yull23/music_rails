@@ -11,12 +11,22 @@ require "faker"
 #   puts Faker::Name.first_name
 #   puts Faker::Name.last_name
 # end
-# OrderItem.destroy_all # 
+OrderItem.destroy_all # 
 Song.destroy_all
 Album.destroy_all
 Artist.destroy_all
-# Order.destroy_all
+Order.destroy_all
 User.destroy_all
+
+
+def generic_order_date(count,initial_date,number_orders)
+  increase=count/number_orders
+  date_object = Date.parse(initial_date)
+  next_date_object = date_object + increase
+  next_date_object.to_s  
+end
+
+
 
 puts "Create Artists"
 5.times do
@@ -49,7 +59,7 @@ puts "Creation of albums with their respective songs "
   album=Album.create(
     name: Faker::Music.album,
     price: rand(20..30),
-    # duration:1,
+    # duration:0,
     artist_id: artist_ids.sample
   )
   i=rand(5..10)
@@ -66,4 +76,29 @@ end
 album_ids=Album.ids
 # p album_ids
 
-puts "Creación de Ordenes con sus respectivos detalles de orden"
+puts "Creation of Orders with their respective order details"
+
+initial_date="2022-01-01" # First order date
+100.times do |n|
+  order=Order.create(
+    order_date:generic_order_date(n,initial_date,5), # Create x orders per day
+    user_id:user_ids.sample
+  )
+  i=rand(3..5)
+  i.times do
+    order_item=OrderItem.create(
+      quantity:rand(2..5),
+      album_id:album_ids.sample,
+      order_id:order.id
+    )
+    order.total+=order_item.sub_total
+  end
+  order.save
+end
+
+
+
+
+
+
+

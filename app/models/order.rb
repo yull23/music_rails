@@ -1,7 +1,8 @@
 class Order < ApplicationRecord
   belongs_to :user
+  has_many :order_items
   validates :order_date, presence: true
-  validates :total, presence: true, numericality: { greater_than: 0 }
+  validates :total, numericality: { greater_than_or_equal_to: 0, only_integer: true }
   validate :event_date_cannot_be_in_the_future
 
   private
