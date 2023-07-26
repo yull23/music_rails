@@ -1,5 +1,11 @@
 # README
 
+## Description
+
+This project demonstrates my ability to work with basic Ruby on Rails logic, manage models and databases, perform tests, and use tools like Faker to generate realistic data. During its development, I created a web application that allows you to efficiently view orders, users and albums. Implemented models, migrations, and validations to ensure valid data and integrity. In addition, I carried out exhaustive tests to ensure the correct functioning of the models and their compliance with requirements. While I haven't emphasized the use of callbacks and associations yet, I plan to improve future functionality and efficiency with these advanced techniques, providing an even richer experience for users.
+
+## Results
+
 ## Considerations
 
 The scenario presented assumes that the project receives existing data from the sale of a record label.
@@ -637,3 +643,103 @@ create order
      end
    end
    ```
+
+## Utilización de Faker y rails db:seed, para creación de datos.
+
+It was done by the following procedure
+
+- Artist Creation: I used the Faker gem to generate fictitious artist data, such as names, nationality, biography, and dates of birth and death.
+
+  ```
+  puts "Create Artists"
+  5.times do
+    Artist.create(
+      name:Faker::Name.name,
+      nationality:Faker::Nation.nationality,
+      biography:Faker::Lorem.paragraphs(number: 5).join(""),
+      birth_date:Faker::Date.between(from: '1940-01-01', to: '1990-12-31'),
+      death_date:Faker::Date.between(from: '1990-01-01', to: '2023-12-31')
+    )
+  end
+  artist_ids=Artist.ids
+  # p artist_ids
+  ```
+
+- User Creation: Also with the help of Faker, I generated users with strong passwords, first names, last names, unique usernames and valid email addresses.
+
+  ```
+  puts "Create Users"
+  5.times do
+    User.create(
+      password: Faker::Internet.password(min_length: 8, max_length: 12, mix_case: true, special_characters: true),
+      first_name: Faker::Name.first_name,
+      last_name: Faker::Name.last_name,
+      username:Faker::Name.first_name+Faker::Name.last_name,
+      email: Faker::Internet.email(name:Faker::Name.name)
+    )
+  end
+  user_ids=User.ids
+  # p user_ids
+  ```
+
+- Creation of Albums with Songs: I developed the logic to create albums with their respective songs using random data from the Faker gem. Each album has a name, a price, and an associated artist. The songs also have random names and durations, and are linked to the corresponding album.
+
+  ```
+  puts "Creation of albums with their respective songs "
+  20.times do
+    album=Album.create(
+      name: Faker::Music.album,
+      price: rand(20..30),
+      # duration:0,
+      artist_id: artist_ids.sample
+    )
+    i=rand(5..10)
+    i.times do
+      song=Song.create(
+        name:Faker::Music::RockBand.song,
+        duration:rand(120..300),
+        album_id:album.id
+      )
+      album.duration+=song.duration
+    end
+    album.save
+  end
+  album_ids=Album.ids
+  # p album_ids
+  ```
+
+- Creation of Orders with Order Details: I implemented the generation of orders with order details. Each order has an order date that is generated sequentially from a start date. A user is also randomly assigned to each order. Order details are randomly generated, with a quantity and album linked.
+
+  ```
+  # Help function
+  def generic_order_date(count,initial_date,number_orders)
+    increase=count/number_orders
+    date_object = Date.parse(initial_date)
+    next_date_object = date_object + increase
+    next_date_object.to_s
+  end
+
+  puts "Creation of Orders with their respective order details"
+
+  initial_date="2022-01-01" # First order date
+  100.times do |n|
+    order=Order.create(
+      order_date:generic_order_date(n,initial_date,5), # Create x orders per day
+      user_id:user_ids.sample
+    )
+    i=rand(3..5)
+    i.times do
+      order_item=OrderItem.create(
+        quantity:rand(2..5),
+        album_id:album_ids.sample,
+        order_id:order.id
+      )
+      order.total+=order_item.sub_total
+    end
+    order.save
+  end
+  ```
+
+These steps allow you to create a complete model that represents artists, users, albums, and songs, and how they are related to each other through orders and order details.
+
+![DATABASE](DATABASE.jpeg)
